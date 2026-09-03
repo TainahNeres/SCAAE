@@ -455,6 +455,7 @@ eventos.forEach(evento => {
             locale: 'pt-br',
 
             initialView: 'dayGridMonth',
+            fixedWeekCount: false,
 
 
 
@@ -478,7 +479,7 @@ eventos.forEach(evento => {
                 center: 'title',
 
                 right:
-                    'dayGridMonth,timeGridWeek,listMonth'
+                    'dayGridMonth,timeGridWeek'
             },
 
             buttonText: {

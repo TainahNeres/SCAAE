@@ -26,10 +26,6 @@
 
             <h1>Login</h1>
 
-            <p class="subtitulo">
-                Informe sua matrícula (SUAP) ou e-mail (Administrador) e sua senha.
-            </p>
-
             <!-- Exibição de erros Laravel -->
             @if($errors->any())
                 <div class="erro-login">
@@ -49,7 +45,6 @@
                     </label>
 
                     <div class="input-icon">
-                        <i class="fa-solid fa-user"></i>
 
                         <input
                             type="text"
@@ -66,7 +61,7 @@
 
                     <div class="input-icon">
 
-                        <i class="fa-solid fa-lock"></i>
+                        
 
                         <input
                             type="password"
@@ -75,10 +70,6 @@
                             placeholder="Digite sua senha"
                             required>
 
-                        <i
-                            class="fa-solid fa-eye mostrar"
-                            id="toggleSenha">
-                        </i>
 
                     </div>
                 </div>
