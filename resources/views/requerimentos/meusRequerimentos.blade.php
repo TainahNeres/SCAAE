@@ -33,6 +33,7 @@
         <tr>
             <th class="py-3 px-6 text-center">Data</th>
             <th class="py-3 px-6 text-center">Número do protocolo</th>
+            <th class="py-3 px-6 text-center">Setor</th>
             <th class="py-3 px-6 text-center">Objeto do requerimento</th>
             <!--Campo situação: para indicar qual o status do andamento do requerimento(análise,concluído...)-->
             <th class="py-3 px-6 text-center">Status</th>
@@ -47,7 +48,11 @@
                     {{ isset($requerimento->created_at) && $requerimento->created_at ? $requerimento->created_at->format('d/m/Y H:i') : (isset($requerimento['created_at']) && $requerimento['created_at'] ? \Carbon\Carbon::parse($requerimento['created_at'])->format('d/m/Y H:i') : date('d/m/Y')) }}
                 </td>
                 <td class="py-3 px-6 text-center dark:text-white">
-                    {{$requerimento['numero_protocolo'] ?? $requerimento->numero_protocolo}}                </td>
+                    {{$requerimento['numero_protocolo'] ?? $requerimento->numero_protocolo}}
+                </td>
+                <td class="py-3 px-6 text-center dark:text-white">
+                    {{ $requerimento->setor->setor_sigla }}
+                </td>
                 <td class="py-3 px-6 text-center dark:text-white">
                     {{$requerimento['objetoDoRequerimento'] ?? $requerimento->objetoDoRequerimento}}
                 </td>
@@ -70,7 +75,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="5" class="py-3 px-6 text-center dark:text-white">
+                <td colspan="6" class="py-3 px-6 text-center dark:text-white">
                     Nenhum requerimento encontrado
                 </td>
             </tr>

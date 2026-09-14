@@ -45,6 +45,10 @@
             <th><strong>Objeto do requerimento:</strong></th>
             <td>{{ $objeto ?? 'Não informado' }}</td>
         </tr>
+        <tr>
+            <th><strong>Setor:</strong></th>
+            <td>{{ $setor ?? 'Não informado' }}</td>
+        </tr>
     </table>
     <hr>
     <p><small>Documento gerado automaticamente pelo SDP - IFBA Campus Seabra | {{ date('d/m/Y H:i:s') }}</small></p>
