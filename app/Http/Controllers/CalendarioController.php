@@ -7,6 +7,7 @@ use App\Models\Evento;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DisciplinaProfessor;
 use App\Models\Professor;
+use function Laravel\Prompts\alert;
 
 class CalendarioController extends Controller
 {
@@ -21,6 +22,24 @@ class CalendarioController extends Controller
 
         $ofertas = collect();
         $turmas = collect();
+/*
+        |--------------------------------------------------------------------------
+        | ADMIN
+        |--------------------------------------------------------------------------
+        */
+        if ($usuario->isAdmin()) {
+
+            $ofertas = DisciplinaProfessor::with([
+                'disciplina',
+                'professor'
+            ])->get();
+        
+            $turmas = $ofertas
+                ->pluck('turma_codigo')
+                ->filter()
+                ->unique()
+                ->values();
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -28,7 +47,8 @@ class CalendarioController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if ($usuario->isProfessor()) {
+
+        else if ($usuario->isProfessor()) {
 
             $professor = Professor::where(
                 'matricula',
@@ -124,7 +144,23 @@ class CalendarioController extends Controller
 
         if ($usuario->isAdmin()) {
 
-            $eventos = Evento::all();
+            if ($request->filled('turma_codigo')) {
+        
+                $eventos = Evento::whereHas('oferta', function ($query) use ($request) {
+        
+                    $query->where(
+                        'turma_codigo',
+                        $request->turma_codigo
+                    );
+        
+                })->get();
+        
+            } else {
+                alert("AAAA");
+                
+        
+            }
+        
         }
 
         /*
@@ -440,6 +476,10 @@ public function verificarLimite(Request $request)
                 'mensagem' => 'Você não possui acesso a esta turma.'
             ], 403);
         }
+    }
+
+    elseif ($usuario->representanteAtivo()) {
+
     }
 
     else {

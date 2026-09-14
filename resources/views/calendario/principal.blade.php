@@ -259,31 +259,31 @@ body {
 
         <h1>Calendário Acadêmico</h1>
 
-@if ($ehProfessor)
+        @if ($ehProfessor || auth()->user()->isAdmin())
 
-    <div style="margin-bottom: 20px;">
+<div style="margin-bottom: 20px;">
 
-        <label for="selectTurma">
-            <strong>Selecione a turma:</strong>
-        </label>
+    <label for="selectTurma">
+        <strong>Selecione a turma:</strong>
+    </label>
 
-        <select id="selectTurma">
+    <select id="selectTurma">
 
-            <option value="">
-                Selecione uma turma
+        <option value="">
+            Selecione uma turma
+        </option>
+
+        @foreach ($turmas as $turma)
+
+            <option value="{{ $turma }}">
+                {{ $turma }}
             </option>
 
-            @foreach ($turmas as $turma)
+        @endforeach
 
-                <option value="{{ $turma }}">
-                    {{ $turma }}
-                </option>
+    </select>
 
-            @endforeach
-
-        </select>
-
-    </div>
+</div>
 
 @endif
 
@@ -330,6 +330,9 @@ const EH_PROFESSOR =
 
 const EH_REPRESENTANTE =
     @json($ehRepresentante);
+
+const EH_ADMIN =
+    @json(auth()->user()->isAdmin());
 
 </script>
 
@@ -508,7 +511,7 @@ eventos.forEach(evento => {
                 let url = '/eventos';
 
                 if (
-                    EH_PROFESSOR &&
+                    (EH_PROFESSOR || EH_ADMIN) &&
                     turmaSelecionada
                 ) {
 
@@ -560,7 +563,7 @@ if (!PODE_GERENCIAR) {
 */
 
 if (
-    EH_PROFESSOR &&
+    (EH_PROFESSOR || EH_ADMIN) &&
     !turmaSelecionada
 ) {
     alert(
@@ -886,7 +889,48 @@ function carregarOfertas() {
         return;
     }
 
+    if (EH_ADMIN) {
 
+if (!turmaSelecionada) {
+
+    const option =
+        document.createElement('option');
+
+    option.value = '';
+
+    option.text =
+        'Selecione uma turma primeiro';
+
+    selectDisciplina.appendChild(option);
+
+    return;
+}
+
+OFERTAS
+    .filter(function(oferta) {
+
+        return oferta.turma_codigo
+            === turmaSelecionada;
+
+    })
+    .forEach(function(oferta) {
+
+        const option =
+            document.createElement('option');
+
+        option.value =
+            oferta.id;
+
+        option.text =
+            oferta.disciplina.nome +
+            ' — ' +
+            oferta.professor.nome;
+
+        selectDisciplina.appendChild(option);
+    });
+
+return;
+}
     /*
     |--------------------------------------------------------------------------
     | REPRESENTANTE
@@ -1063,7 +1107,7 @@ function carregarProfessores() {
     }
             
     if (
-        EH_PROFESSOR &&
+        (EH_PROFESSOR || EH_ADMIN) &&
         !turmaSelecionada
     ) {
 
