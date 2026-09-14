@@ -39,10 +39,16 @@ class Requerimento extends Model
         return $this->belongsTo(AssuntoRequerimento::class, 'assunto_requerimento_id');
     }
 
+    //Relacionamento de setor com requerimento;
+     public function setor()
+    {
+        return $this->belongsTo(Setor::class, 'setor_id', 'id');
+    }
+
     /**
      * Setor destinatário do requerimento (via assunto).
      */
-    public function setor()
+    public function setorAssunto()
     {
         return $this->hasOneThrough(
             Setor::class,
