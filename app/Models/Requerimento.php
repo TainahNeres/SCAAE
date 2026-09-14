@@ -13,6 +13,7 @@ class Requerimento extends Model
 
     protected $fillable = [
         'usuario_id',
+        'setor_id',
         'assunto_requerimento_id',
         'objetoDoRequerimento',
         'numero_protocolo',
