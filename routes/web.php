@@ -11,6 +11,7 @@ use App\Http\Controllers\SuapCrawlerController;
 use App\Http\Controllers\SuapExplorerController;
 use App\Http\Controllers\SuapTestController;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Admin\RepresentanteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,13 +81,6 @@ Route::middleware(['auth', 'role:professor'])->group(function () {
 | trocar por middleware próprio consultando a tabela representantes.
 |
 */
-Route::middleware(['auth', 'representante'])->group(function () {
-
-    Route::get('/representante/dashboard', function () {
-        return view('representante.dashboard');
-    });
-
-});
 
 
 /*
@@ -98,58 +92,24 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | DASHBOARD
-        |--------------------------------------------------------------------------
-        */
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
-        });
+        })->name('admin.dashboard');
 
+        Route::get(
+            '/representantes',
+            [RepresentanteController::class, 'index']
+        )->name('admin.representantes.index');
 
-        /*
-        |--------------------------------------------------------------------------
-        | TURMAS
-        |--------------------------------------------------------------------------
-        */
-        Route::get('/turmas/create', [TurmaController::class, 'create']);
+        Route::get(
+            '/representantes/promover',
+            [RepresentanteController::class, 'create']
+        )->name('admin.representantes.create');
 
-        Route::post('/turmas', [TurmaController::class, 'store']);
-
-        Route::get('/turmas/listar', [TurmaController::class, 'listar']);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | PROFESSORES
-        |--------------------------------------------------------------------------
-        |
-        | Futuramente essas rotas poderão ser removidas,
-        | caso os professores sejam sincronizados pelo SUAP.
-        |
-        */
-        Route::get('/professores/create', [ProfessorController::class, 'create']);
-
-        Route::post('/professores', [ProfessorController::class, 'store']);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | REPRESENTANTES
-        |--------------------------------------------------------------------------
-        |
-        | Atualmente:
-        | promoção de aluno.
-        |
-        | Futuramente:
-        | registro na tabela representantes.
-        |
-        */
-        Route::get('/alunos/promover', [AlunoController::class, 'createPromocao']);
-
-        Route::post('/alunos/promover', [AlunoController::class, 'storePromocao']);
-
+        Route::post(
+            '/representantes/promover',
+            [RepresentanteController::class, 'store']
+        )->name('admin.representantes.store');
     });
 
 

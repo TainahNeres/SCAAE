@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
 
+    <title>Dashboard do Administrador</title>
 
-<title>Dashboard do Administrador</title>
-
-<link rel="stylesheet" href="{{ asset('css/dashboardadmin.css') }}">
-
-
+    <link rel="stylesheet"
+          href="{{ asset('css/dashboardadmin.css') }}">
 </head>
 
 <body>
-
 
 <div class="dashboard">
 
@@ -27,35 +23,37 @@
     <hr>
 
     <section class="dashboard-section">
-        <h3>Turmas</h3>
 
-        <a href="/admin/turmas/create">
-            Criar Turma
+        <h3>Calendário Acadêmico</h3>
+
+        <p>
+            Visualize e gerencie os eventos acadêmicos de todas as turmas.
+        </p>
+
+        <a href="{{ url('/calendario') }}">
+            Acessar calendário
         </a>
 
-        <a href="/admin/turmas/listar">
-            Listar Turmas
-        </a>
     </section>
 
     <hr>
 
     <section class="dashboard-section">
-        <h3>Professores</h3>
 
-        <a href="/admin/professores/create">
-            Criar Professor
+        <h3>Representantes</h3>
+
+        <p>
+            Gerencie os representantes das turmas.
+        </p>
+
+        <a href="{{ route('admin.representantes.index') }}">
+            Listar representantes
         </a>
-    </section>
 
-    <hr>
-
-    <section class="dashboard-section">
-        <h3>Alunos</h3>
-
-        <a href="/admin/alunos/promover">
-            Promover Aluno a Representante
+        <a href="{{ route('admin.representantes.create') }}">
+            Promover aluno a representante
         </a>
+
     </section>
 
 </div>
