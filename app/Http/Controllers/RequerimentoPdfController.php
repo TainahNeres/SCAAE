@@ -34,6 +34,7 @@ class RequerimentoPdfController extends Controller
     public static function criarComprovante(
         Usuario $nomeRequerente,
         string $numeroTurma,
+        string $setor,
         ?string $objeto = null,
         string $numeroProtocolo,
         ?\Carbon\Carbon $dataSolicitacao = null,
@@ -42,6 +43,7 @@ class RequerimentoPdfController extends Controller
             'nomeRequerente' => $nomeRequerente,
             'numeroTurma' => $numeroTurma,
             'objeto' => $objeto,
+            'setor' => $setor,
             'numeroProtocolo' => $numeroProtocolo,
             'dataSolicitacao'=> $dataSolicitacao,
         ])->setPaper('a4', 'portrait');
@@ -83,7 +85,7 @@ class RequerimentoPdfController extends Controller
 
     public function gerarComprovante($id, Request $request)
     {
-        $requerimento = Requerimento::with('usuario')->findOrFail($id);
+        $requerimento = Requerimento::with('usuario','setor')->findOrFail($id);
 
         $dados = [
             'nomeRequerente' => $requerimento->usuario->nome, 
@@ -95,6 +97,7 @@ class RequerimentoPdfController extends Controller
             nomeRequerente: $requerimento->usuario, 
             numeroTurma: $requerimento->usuario->turma_codigo,
             objeto: $requerimento->objetoDoRequerimento,
+            setor: $requerimento->setor->setor_sigla,
             dataSolicitacao: $requerimento->created_at,
             numeroProtocolo: $requerimento->numero_protocolo
         );
