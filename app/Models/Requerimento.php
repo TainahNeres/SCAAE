@@ -31,18 +31,67 @@ class Requerimento extends Model
     }
 
     /**
-     * Setor destinatário do requerimento.
-     */
-    public function setor()
-    {
-        return $this->belongsTo(Setor::class, 'setor_id');
-    }
-
-    /**
      * Assunto (objetivo) vinculado a este requerimento.
      */
     public function assunto()
     {
         return $this->belongsTo(AssuntoRequerimento::class, 'assunto_requerimento_id');
+    }
+
+    /**
+     * Setor destinatário do requerimento (via assunto).
+     */
+    public function setor()
+    {
+        return $this->hasOneThrough(
+            Setor::class,
+            AssuntoRequerimento::class,
+            'id',                      // FK em assuntos_requerimentos vinculada ao requerimento
+            'id',                      // FK em setores
+            'assunto_requerimento_id', // Local key em requerimentos
+            'setor_id'                 // Local key em assuntos_requerimentos
+        );
+    }
+
+    /**
+     * Retorna a sigla ou nome resumido do setor destinatário.
+     */
+    public function getSetorSiglaAttribute(): string
+    {
+        if ($this->assunto && $this->assunto->setor) {
+            return $this->assunto->setor->setor_sigla ?: $this->assunto->setor->setor_nome;
+        }
+
+        if (!empty($this->objetoDoRequerimento)) {
+            $assunto = AssuntoRequerimento::with('setor')
+                ->where('descricao', $this->objetoDoRequerimento)
+                ->first();
+            if ($assunto && $assunto->setor) {
+                return $assunto->setor->setor_sigla ?: $assunto->setor->setor_nome;
+            }
+        }
+
+        return 'Geral';
+    }
+
+    /**
+     * Retorna o nome completo do setor.
+     */
+    public function getSetorNomeAttribute(): string
+    {
+        if ($this->assunto && $this->assunto->setor) {
+            return $this->assunto->setor->setor_nome ?: $this->assunto->setor->setor_sigla;
+        }
+
+        if (!empty($this->objetoDoRequerimento)) {
+            $assunto = AssuntoRequerimento::with('setor')
+                ->where('descricao', $this->objetoDoRequerimento)
+                ->first();
+            if ($assunto && $assunto->setor) {
+                return $assunto->setor->setor_nome ?: $assunto->setor->setor_sigla;
+            }
+        }
+
+        return 'Setor Geral';
     }
 }
