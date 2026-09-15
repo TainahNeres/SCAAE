@@ -97,7 +97,7 @@ class RequerimentoPdfController extends Controller
             nomeRequerente: $requerimento->usuario, 
             numeroTurma: $requerimento->usuario->turma_codigo,
             objeto: $requerimento->objetoDoRequerimento,
-            setor: $requerimento->setor->setor_sigla,
+            setor: $requerimento->setor?->setor_sigla ?? $requerimento->setor_sigla,
             dataSolicitacao: $requerimento->created_at,
             numeroProtocolo: $requerimento->numero_protocolo
         );
