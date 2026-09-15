@@ -179,7 +179,7 @@
                             <td>{{ $requerimento->objetoDoRequerimento }}</td>
                             <td style="text-align: center;">
                                 <span class="badge badge-setor" title="{{ $requerimento->setor_nome }}">
-                                    {{ $requerimento->setor_sigla }}
+                                    {{ $requerimento->setor->setor_sigla }}
                                 </span>
                             </td>
                             <td style="color: #64748b; font-size: 0.8125rem;">
