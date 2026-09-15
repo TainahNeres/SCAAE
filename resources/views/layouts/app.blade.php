@@ -80,7 +80,7 @@
         </div>
     </header>
 
-    <main class="flex-1 container" style="padding-top: 32px;">
+    <main class="main-content flex-1 container" style="padding-top: 32px;">
         @yield('content')
     </main>
 
@@ -93,15 +93,6 @@
                     <div class="footer-brand-name">SDP</div>
                     <div class="footer-brand-sub">Sistema de Protocolos e Requerimentos</div>
                 </div>
-            </div>
-
-            <div class="footer-links">
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="footer-link">Dashboard</a>
-                @else
-                    <a href="{{ route('requerimentos.aluno.novo') }}" class="footer-link">Novo Requerimento</a>
-                    <a href="{{ route('requerimentos.aluno.meusRequerimentos') }}" class="footer-link">Meus Requerimentos</a>
-                @endif
             </div>
 
         </div>
