@@ -51,7 +51,7 @@
                     {{$requerimento['numero_protocolo'] ?? $requerimento->numero_protocolo}}
                 </td>
                 <td class="py-3 px-6 text-center dark:text-white">
-                    {{ $requerimento->setor->setor_sigla }}
+                    {{ $requerimento->setor?->setor_sigla ?? $requerimento->setor_sigla }}
                 </td>
                 <td class="py-3 px-6 text-center dark:text-white">
                     {{$requerimento['objetoDoRequerimento'] ?? $requerimento->objetoDoRequerimento}}
