@@ -35,6 +35,10 @@
                        class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <span>Dashboard</span>
                     </a>
+                    <a href="{{ route('admin.consultar-requerimentos') }}"
+                       class="nav-link {{ request()->routeIs('admin.consultar-requerimentos') ? 'active' : '' }}">
+                        <span>Consultar requerimentos</span>
+                    </a>
                     @else
                         <a href="{{ route('requerimentos.aluno.novo') }}"
                         class="nav-link {{ request()->routeIs('requerimentos.aluno.novo') ? 'active' : '' }}">
