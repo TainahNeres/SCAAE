@@ -73,7 +73,7 @@
             </div>
 
             <div class="sobre-image">
-                <img loading="lazy" src="{{ asset('img/image.png') }}" alt="Ilustração do sistema SDP" class="fade-right">
+                <img loading="lazy" src="{{ asset('img/home_sistema.webp') }}" alt="Ilustração do sistema SDP" class="fade-right">
             </div>
         </div>
     </div>
@@ -89,23 +89,23 @@
                 </div>
                 <h3>Caio Souza dos Anjos</h3>
                 <p class="role">Discente IFBA</p>
-                <p class="desc">ads.</p>
+                <p class="desc">Discente da graduação em ADS, ingresso no 1º semestre de 2026.</p>
             </div>
             <div class="card-dev">
                 <div class="avatar">
-                    <img loading="lazy" src="{{ asset('img/perfil/claudeilson.png') }}" alt="Claudeilson sobrenome completo">
+                    <img loading="lazy" src="{{ asset('img/perfil/claudeilson.png') }}" alt="Claudeilson Souza Assuncão">
                 </div>
-                <h3>Claudeilson sobrenome completo</h3>
+                <h3>Claudeilson Souza Assuncão</h3>
                 <p class="role">Discente IFBA</p>
-                <p class="desc">ads.</p>
+                <p class="desc">Discente da graduação em ADS, ingresso no 1º semestre de 2026.</p>
             </div>
             <div class="card-dev">
                 <div class="avatar">
-                    <img loading="lazy" src="{{ asset('img/perfil/graziele.png') }}" alt="Graziele Sobrenome Completo">
+                    <img loading="lazy" src="{{ asset('img/perfil/graziele.png') }}" alt="Graziele Brandão Silva">
                 </div>
-                <h3>Graziele Sobrenome Completo</h3>
+                <h3>Graziele Brandão Silva</h3>
                 <p class="role">Discente IFBA</p>
-                <p class="desc">ads.</p>
+                <p class="desc">Discente da graduação em ADS, ingresso no 1º semestre de 2026.</p>
             </div>
             <div class="card-dev">
                 <div class="avatar">
@@ -113,7 +113,7 @@
                 </div>
                 <h3>Larissa Souza Rocha</h3>
                 <p class="role">Discente IFBA</p>
-                <p class="desc">ads.</p>
+                <p class="desc">Discente da graduação em ADS, ingresso no 1º semestre de 2026.</p>
             </div>
 
             <div class="card-dev">

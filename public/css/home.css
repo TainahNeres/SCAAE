@@ -22,7 +22,7 @@ body {
 /* Layout Containers */
 .container {
     width: 100%;
-    max-width: 1200px;
+    /* max-width: 1200px; */
     margin: 0 auto;
     padding: 0 1.5rem;
     box-sizing: border-box;
@@ -179,11 +179,9 @@ section {
 }
 
 .devs-grid {
-    /* display: grid;
-    grid-template-columns: repeat(5, 1fr); */
-    display: flex;
-    gap: 2.5rem;
-    max-width: 800px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
     margin: 0 auto;
 }
 
