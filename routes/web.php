@@ -14,8 +14,10 @@ use App\Http\Controllers\AdminSetorController;
 | REDIRECIONAMENTO INICIAL
 |--------------------------------------------------------------------------
 */
-Route::redirect('/', '/login');
-
+// Route::redirect('/', '/login');
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 /*
 |--------------------------------------------------------------------------
 | LOGIN & AUTENTICAÇÃO
