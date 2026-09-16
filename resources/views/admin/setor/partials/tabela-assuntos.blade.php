@@ -10,7 +10,6 @@
         <table class="tabela-assuntos">
             <thead>
                 <tr>
-                    <th class="col-codigo">Cód.</th>
                     <th class="col-descricao">Descrição do Requerimento</th>
                     <th class="col-observacao">Observação / Requisito</th>
                     <th class="col-docs">Documentos</th>
@@ -36,9 +35,6 @@
                     </form>
 
                     <tr>
-                        <td style="text-align: center;">
-                            <input form="{{ $formUpdateId }}" type="text" name="codigo" value="{{ $assunto->codigo }}" class="input-tabela input-codigo" placeholder="01">
-                        </td>
                         <td>
                             <input form="{{ $formUpdateId }}" type="text" name="descricao" value="{{ $assunto->descricao }}" required class="input-tabela" title="{{ $assunto->descricao }}">
                         </td>
@@ -79,7 +75,7 @@
                     ])
                 @empty
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 20px; color: #6b7280;">Nenhum requerimento cadastrado.</td>
+                        <td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Nenhum requerimento cadastrado.</td>
                     </tr>
                 @endforelse
             </tbody>

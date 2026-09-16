@@ -6,10 +6,6 @@
     <form action="{{ route('admin.setores.assuntos.store', $modelo->id) }}" method="POST">
         @csrf
         <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
-            <div style="width: 90px;">
-                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: #4b5563; margin-bottom: 4px;">Código:</label>
-                <input type="text" name="codigo" placeholder="Ex: 12" class="input-tabela">
-            </div>
             <div style="flex: 2; min-width: 320px;">
                 <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: #4b5563; margin-bottom: 4px;">Descrição:*</label>
                 <input type="text" name="descricao" placeholder="Ex: Declaração de Horário Individual" required class="input-tabela">
