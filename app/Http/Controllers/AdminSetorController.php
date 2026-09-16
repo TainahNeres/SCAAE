@@ -29,8 +29,6 @@ class AdminSetorController extends Controller
             'setor_sigla'      => 'required|string|max:50',
             'setor_nome'       => 'required|string|max:255',
             'email'            => 'nullable|email|max:255',
-            'processo_prefixo' => 'nullable|string|max:20',
-            'rodape_contato'   => 'nullable|string|max:255',
             'ativo'            => 'nullable|boolean',
         ]);
 
@@ -39,8 +37,6 @@ class AdminSetorController extends Controller
             'setor_sigla'      => $dados['setor_sigla'],
             'setor_nome'       => $dados['setor_nome'],
             'email'            => $dados['email'] ?? null,
-            'processo_prefixo' => $dados['processo_prefixo'] ?: '23720',
-            'rodape_contato'   => $dados['rodape_contato'] ?? null,
             'ativo'            => $request->has('ativo'),
         ]);
 
@@ -65,8 +61,6 @@ class AdminSetorController extends Controller
             'setor_sigla' => 'required|string|max:50',
             'setor_nome' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
-            'processo_prefixo' => 'nullable|string|max:20',
-            'rodape_contato' => 'nullable|string|max:255',
             'ativo' => 'nullable|boolean',
         ]);
 
@@ -75,8 +69,6 @@ class AdminSetorController extends Controller
             'setor_sigla' => $dados['setor_sigla'],
             'setor_nome' => $dados['setor_nome'],
             'email' => $dados['email'] ?? null,
-            'processo_prefixo' => $dados['processo_prefixo'] ?: '23720',
-            'rodape_contato' => $dados['rodape_contato'] ?? null,
             'ativo' => $request->has('ativo'),
         ]);
 
@@ -89,7 +81,6 @@ class AdminSetorController extends Controller
         $setor = Setor::findOrFail($setorId);
 
         $dados = $request->validate([
-            'codigo' => 'nullable|string|max:20',
             'descricao' => 'required|string|max:255',
             'observacao' => 'nullable|string|max:500',
             'ordem' => 'nullable|integer',
@@ -99,7 +90,6 @@ class AdminSetorController extends Controller
 
         AssuntoRequerimento::create([
             'setor_id' => $setor->id,
-            'codigo' => $dados['codigo'] ?? null,
             'descricao' => $dados['descricao'],
             'observacao' => $dados['observacao'] ?? null,
             'ordem' => $dados['ordem'] ?? ($maxOrdem + 1),
@@ -115,7 +105,6 @@ class AdminSetorController extends Controller
         $assunto = AssuntoRequerimento::findOrFail($assuntoId);
 
         $dados = $request->validate([
-            'codigo' => 'nullable|string|max:20',
             'descricao' => 'required|string|max:255',
             'observacao' => 'nullable|string|max:500',
             'ordem' => 'required|integer',
@@ -123,7 +112,6 @@ class AdminSetorController extends Controller
         ]);
 
         $assunto->update([
-            'codigo' => $dados['codigo'] ?? null,
             'descricao' => $dados['descricao'],
             'observacao' => $dados['observacao'] ?? null,
             'ordem' => $dados['ordem'],
