@@ -36,7 +36,6 @@
                 <th class="py-3 px-6 text-center">Setor</th>
                 <th class="py-3 px-6 text-center">Objeto do requerimento</th>
                 <!--Campo situação: para indicar qual o status do andamento do requerimento(análise,concluído...)-->
-                <th class="py-3 px-6 text-center">Status</th>
                 <th class="py-3 px-6 text-center">Ações</th>
             </tr>
         </thead>
@@ -56,17 +55,7 @@
                     <td class="py-3 px-6 text-center">
                         {{$requerimento['objetoDoRequerimento'] ?? $requerimento->objetoDoRequerimento}}
                     </td>
-                    <td class="py-3 px-6 text-center">
-                        @if ($requerimento->status === 'Aprovado')
-                            <span class="inline-block px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 border border-green-500 rounded-full border-green-600 text-green-900">
-                                Aprovado
-                            </span>
-                        @elseif ($requerimento->status === 'Em análise' || $requerimento->status === 'Em Análise' || is_null($requerimento->status))
-                            <span class="inline-block px-3 py-1 text-sm font-semibold text-yellow-800 bg-yellow-100 border border-yellow-500 rounded-full">
-                                Em análise
-                            </span>
-                        @endif
-                    </td>
+
                     <td class="py-3 px-6 text-center">
                         <a href="{{ route('requerimentos.gerar-comprovante', ['id' => $requerimento->id]) }}" class=" inline-block px-3 py-1 text-sm font-semibold rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded-lg">
                             Imprimir comprovante

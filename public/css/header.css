@@ -203,7 +203,7 @@
 }
 
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
     .header-inner {
         padding: 6px 10px;
         gap: 6px;
