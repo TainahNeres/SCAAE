@@ -13,7 +13,7 @@
         <strong>Setor:</strong>
         @foreach($modelos as $mod)
             <a href="{{ route('requerimentos.aluno.novo', ['setor' => $mod['id']]) }}"
-               class="{{ ($modeloChave ?? '') == $mod['id'] ? 'active' : '' }} btn-nav">
+               class="{{ ($modeloChave ?? '') == $mod['id'] ? 'active' : '' }} btn-nav"  id='navegacao-btn'>
                 {{ $mod['setor_sigla'] }}
             </a>
         @endforeach
