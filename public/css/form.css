@@ -416,4 +416,16 @@ form {
         gap: 5px;
     }
 
+    #navegacao-btn {
+        font-size: .75rem;
+    }
+
+    legend {
+        font-size: 1.25rem;
+    }
+
+    .form-box {
+        padding: 20px;
+    }
+
 }
