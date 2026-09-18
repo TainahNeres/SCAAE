@@ -67,6 +67,14 @@
                                 <span>Meus Requerimentos</span>
                             </a>
                         @endif
+                        @auth
+                            @if(auth()->user()->ehResponsavel())
+                                <a href="{{ route('setor.responsavel.dashboard') }}"
+                                    class="nav-link {{ request()->routeIs('setor.responsavel.dashboard') ? 'active' : '' }}">
+                                    {{ auth()->user()->setoresSobResponsabilidade->first()?->setor_sigla ?? 'Setor' }}
+                                </a>
+                            @endif
+                        @endauth
                     </nav>
 
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Requerimento;
+use App\Models\Setor;
 
 class Usuario extends Authenticatable
 {
@@ -50,6 +51,36 @@ class Usuario extends Authenticatable
     {
         return $this->role === 'professor';
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPONSABILIDADE DE SETOR
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Retorna os setores vinculados a este responsável.
+     */
+    public function setoresSobResponsabilidade()
+    {
+        return $this->hasMany(Setor::class, 'responsavel_id');
+    }
+
+    public function ehResponsavel(): bool
+    {
+        return $this->setoresSobResponsabilidade()->exists();
+    }
+
+    public function ehResponsavelDoSetor($setorId): bool
+    {
+        return $this->setoresSobResponsabilidade()->where('id', $setorId)->exists();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | OUTROS RELACIONAMENTOS
+    |--------------------------------------------------------------------------
+    */
 
     public function requerimentos()
     {

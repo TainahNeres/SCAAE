@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
 
 class Setor extends Model
 {
@@ -15,6 +14,7 @@ class Setor extends Model
         'email',
         'titulo',
         'ativo',
+        'responsavel_id',
     ];
 
     protected $casts = [
@@ -38,13 +38,21 @@ class Setor extends Model
         return $this->hasMany(Requerimento::class, 'setor_id');
     }
 
+    public function responsavel()
+    {
+        return $this->belongsTo(Usuario::class, 'responsavel_id');
+    }
+
     /**
      * Retorna os setores formatados para uso nos controllers e views.
      */
     public static function obterSetoresFormatados(): array
     {
         try {
-            $setoresBanco = static::with(['assuntosAtivos.documentos'])->where('ativo', true)->get();
+            // Incluído 'responsavel' no Eager Loading para evitar queries N+1
+            $setoresBanco = static::with(['responsavel', 'assuntosAtivos.documentos'])
+                ->where('ativo', true)
+                ->get();
 
             if ($setoresBanco->isEmpty()) {
                 return [];
@@ -54,6 +62,7 @@ class Setor extends Model
             foreach ($setoresBanco as $mod) {
                 $objetos = [];
                 $assuntosDetalhes = [];
+
                 foreach ($mod->assuntosAtivos as $assunto) {
                     $chave = str_pad((string) $assunto->id, 2, '0', STR_PAD_LEFT);
                     $objetos[$chave] = $assunto->descricao;
@@ -74,12 +83,17 @@ class Setor extends Model
                 }
 
                 $resultado[$mod->id] = [
-                    'id' => $mod->id,
-                    'setor_sigla' => $mod->setor_sigla,
-                    'setor_nome' => $mod->setor_nome,
-                    'email' => $mod->email,
-                    'titulo' => $mod->titulo,
-                    'objetos' => $objetos,
+                    'id'            => $mod->id,
+                    'setor_sigla'   => $mod->setor_sigla,
+                    'setor_nome'    => $mod->setor_nome,
+                    'email'         => $mod->email,
+                    'titulo'        => $mod->titulo,
+                    'responsavel'   => $mod->responsavel ? [
+                        'id'    => $mod->responsavel->id,
+                        'nome'  => $mod->responsavel->nome ?? $mod->responsavel->name,
+                        'email' => $mod->responsavel->email,
+                    ] : null,
+                    'objetos'           => $objetos,
                     'assuntos_detalhes' => $assuntosDetalhes,
                 ];
             }
