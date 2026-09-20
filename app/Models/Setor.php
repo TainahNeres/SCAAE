@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Setor extends Model
 {
@@ -14,7 +16,6 @@ class Setor extends Model
         'email',
         'titulo',
         'ativo',
-        'responsavel_id',
     ];
 
     protected $casts = [
@@ -38,9 +39,9 @@ class Setor extends Model
         return $this->hasMany(Requerimento::class, 'setor_id');
     }
 
-    public function responsavel()
+    public function responsaveis(): BelongsToMany
     {
-        return $this->belongsTo(Usuario::class, 'responsavel_id');
+        return $this->belongsToMany(Usuario::class, 'setor_responsavel', 'setor_id', 'usuario_id');
     }
 
     /**
@@ -49,8 +50,8 @@ class Setor extends Model
     public static function obterSetoresFormatados(): array
     {
         try {
-            // Incluído 'responsavel' no Eager Loading para evitar queries N+1
-            $setoresBanco = static::with(['responsavel', 'assuntosAtivos.documentos'])
+            // Incluído 'responsaveis' no Eager Loading para evitar queries N+1
+            $setoresBanco = static::with(['responsaveis', 'assuntosAtivos.documentos'])
                 ->where('ativo', true)
                 ->get();
 
@@ -88,14 +89,14 @@ class Setor extends Model
                     'setor_nome'    => $mod->setor_nome,
                     'email'         => $mod->email,
                     'titulo'        => $mod->titulo,
-                    'responsavel'   => $mod->responsavel ? [
-                        'id'    => $mod->responsavel->id,
-                        'nome'  => $mod->responsavel->nome ?? $mod->responsavel->name,
-                        'email' => $mod->responsavel->email,
-                    ] : null,
-                    'objetos'           => $objetos,
-                    'assuntos_detalhes' => $assuntosDetalhes,
-                ];
+                    'responsaveis'  => $mod->responsaveis->map(fn($r) => [
+                        'id'    => $r->id,
+                        'nome'  => $r->nome ?? $r->name,
+                        'email' => $r->email,
+                    ])->toArray(),
+                        'objetos'           => $objetos,
+                        'assuntos_detalhes' => $assuntosDetalhes,
+                    ];
             }
 
             return $resultado;

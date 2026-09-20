@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Requerimento;
 use App\Models\Setor;
+use App\Models\Endereco;
 
 class Usuario extends Authenticatable
 {
@@ -61,9 +65,9 @@ class Usuario extends Authenticatable
     /**
      * Retorna os setores vinculados a este responsável.
      */
-    public function setoresSobResponsabilidade()
+    public function setoresSobResponsabilidade(): BelongsToMany
     {
-        return $this->hasMany(Setor::class, 'responsavel_id');
+        return $this->belongsToMany(Setor::class, 'setor_responsavel', 'usuario_id', 'setor_id');
     }
 
     public function ehResponsavel(): bool
@@ -73,7 +77,7 @@ class Usuario extends Authenticatable
 
     public function ehResponsavelDoSetor($setorId): bool
     {
-        return $this->setoresSobResponsabilidade()->where('id', $setorId)->exists();
+        return $this->setoresSobResponsabilidade()->where('setores.id', $setorId)->exists();
     }
 
     /*

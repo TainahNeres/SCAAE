@@ -78,7 +78,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'responsavel'])->group(function () {
-    Route::get('/setor/dashboard', [ResponsavelSetorController::class, 'index'])
+    Route::get('/setor/{setor_id}/dashboard', [ResponsavelSetorController::class, 'index'])
         ->name('setor.responsavel.dashboard');
 });
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Painel do Aluno - SDP')
+@section('title', $setores->first()->setor_sigla . ' - SDP')
 @section('tag', 'Aluno')
 
 @section('content')
