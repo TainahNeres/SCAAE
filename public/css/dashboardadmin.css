@@ -122,3 +122,213 @@ body {
         min-height: 43px;
     }
 }
+/* =========================================
+   TABELA DE REPRESENTANTES
+========================================= */
+
+.tabela-representantes-container {
+    width: 100%;
+    margin-top: 28px;
+    overflow-x: auto;
+}
+
+/* Estrutura principal da tabela */
+
+.tabela-representantes {
+    width: 100%;
+    min-width: 650px;
+
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Largura de cada coluna */
+
+.tabela-representantes th:nth-child(1),
+.tabela-representantes td:nth-child(1) {
+    width: 38%;
+}
+
+.tabela-representantes th:nth-child(2),
+.tabela-representantes td:nth-child(2) {
+    width: 20%;
+}
+
+.tabela-representantes th:nth-child(3),
+.tabela-representantes td:nth-child(3) {
+    width: 42%;
+}
+
+/* Cabeçalho */
+
+.tabela-representantes thead {
+    background-color: #f1f5f9;
+}
+
+.tabela-representantes th {
+    padding: 20px 24px;
+
+    color: #334155;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Células */
+
+.tabela-representantes td {
+    padding: 24px;
+
+    color: #334155;
+
+    font-size: 0.95rem;
+    line-height: 1.6;
+
+    text-align: left;
+    vertical-align: middle;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    overflow-wrap: anywhere;
+}
+
+/* Remove a borda da última linha */
+
+.tabela-representantes tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alternância de cores entre as linhas */
+
+.tabela-representantes tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+/* Efeito ao passar o mouse */
+
+.tabela-representantes tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.tabela-representantes tbody tr:hover {
+    background-color: #eff6ff;
+}
+
+/* Organização interna de cada campo */
+
+.campo-tabela {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    min-width: 0;
+}
+
+/* Destaque da turma */
+
+.turma-destaque {
+    display: inline-block;
+
+    width: fit-content;
+    padding: 5px 10px;
+
+    color: #1d4ed8;
+    background-color: #dbeafe;
+
+    border-radius: 6px;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* Rótulos utilizados apenas no celular */
+
+.rotulo-mobile {
+    display: none;
+}
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .tabela-representantes {
+        min-width: 0;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    .tabela-representantes thead {
+        display: none;
+    }
+
+    .tabela-representantes,
+    .tabela-representantes tbody,
+    .tabela-representantes tr,
+    .tabela-representantes td {
+        display: block;
+        width: 100%;
+    }
+
+    .tabela-representantes tr {
+        margin-bottom: 20px;
+
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .tabela-representantes tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .tabela-representantes tbody tr:hover {
+        background-color: #ffffff;
+    }
+
+    .tabela-representantes td {
+        padding: 16px 20px;
+
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .tabela-representantes td:last-child {
+        border-bottom: none;
+    }
+
+    .rotulo-mobile {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: #64748b;
+
+        font-size: 0.7rem;
+        font-weight: 700;
+
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .tabela-representantes .turma-destaque {
+        margin-top: 2px;
+    }
+}

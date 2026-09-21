@@ -32,13 +32,15 @@
 
     @else
 
-        <table>
+    <div class="tabela-representantes-container">
+
+        <table class="tabela-representantes">
+
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Turma</th>
                     <th>E-mail pessoal</th>
-                    
                 </tr>
             </thead>
 
@@ -48,27 +50,53 @@
 
                     <tr>
 
-                        <td>
-                            {{ $representante->usuario->nome }}
+                        <td class="coluna-nome">
+                            <div class="campo-tabela">
+                                <span class="rotulo-mobile">
+                                    Nome
+                                </span>
+
+                                <span>
+                                    {{ $representante->usuario->nome }}
+                                </span>
+                            </div>
                         </td>
 
-                        <td>
-                            {{ $representante->usuario->turma_codigo ?? 'Não informado' }}
+                        <td class="coluna-turma">
+                            <div class="campo-tabela">
+                                <span class="rotulo-mobile">
+                                    Turma
+                                </span>
+
+                                <span class="turma-destaque">
+                                    {{ $representante->usuario->turma_codigo ?? 'Não informado' }}
+                                </span>
+                            </div>
                         </td>
 
-                        <td>
-                            {{ $representante->usuario->email_pessoal ?? 'Não informado' }}
-                        </td>
+                        <td class="coluna-email">
+                            <div class="campo-tabela">
+                                <span class="rotulo-mobile">
+                                    E-mail pessoal
+                                </span>
 
+                                <span>
+                                    {{ $representante->usuario->email_pessoal ?? 'Não informado' }}
+                                </span>
+                            </div>
+                        </td>
 
                     </tr>
 
                 @endforeach
 
             </tbody>
+
         </table>
 
-    @endif
+    </div>
+
+@endif
 
     <br>
 
