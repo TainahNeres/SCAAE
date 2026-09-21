@@ -30,7 +30,7 @@ body {
         }
 
         h1 {
-            color: #334155;
+            color: #008f2f;
         }
 
         #calendar {
@@ -73,7 +73,7 @@ body {
     margin-bottom: 6px;
     background: #f8f9fa;
     border-radius: 6px;
-    border-left: 3px solid #2c7be5;
+    border-left: 3px solid rgb(209, 0, 0);
 }
 
 .evento-semana:last-child {
@@ -139,29 +139,35 @@ body {
 .navbar {
     max-width: 1200px;
     margin: 0 auto 20px auto;
-
     background: white;
-
     padding: 12px 20px;
-
     border-radius: 15px;
-
     box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
 
     display: flex;
-
     align-items: center;
-
-    justify-content: space-between;
 }
 
+/* Logo na extrema esquerda */
 .navbar-esquerda {
     display: flex;
-
     align-items: center;
-
-    gap: 5px;
+    margin-right: auto;
 }
+
+.navbar-esquerda img {
+    width: 185px;
+    height: auto;
+    display: block;
+}
+
+/* Usuário na extrema direita */
+.navbar-direita {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
 
 .nav-botao {
     text-decoration: none;
@@ -191,11 +197,6 @@ body {
     font-weight: bold;
 }
 
-.navbar-direita {
-    display: flex;
-
-    align-items: center;
-}
 
 .usuario-logado {
     display: flex;
@@ -204,7 +205,7 @@ body {
 
     align-items: flex-end;
 
-    color: #334155;
+    color: #006020;
 }
 
 .usuario-logado strong {
@@ -248,6 +249,83 @@ body {
         #btnExcluir {
             background: #eba4a4;
         }
+
+        /* ==============================
+   PERSONALIZAÇÃO DO CALENDÁRIO
+   ============================== */
+
+/* Cabeçalho com os dias da semana */
+.fc .fc-col-header-cell {
+    background-color: #006020;
+    color: white;
+}
+
+/* Números dos dias */
+.fc .fc-daygrid-day-number {
+    color: #334155;
+}
+
+/* Dia atual */
+.fc .fc-day-today {
+    background-color: #e8f5e9 !important;
+}
+
+/* Botões do calendário */
+.fc .fc-button {
+    background-color: #008f2f;
+    border-color: #008f2f;
+}
+
+/* Botão ao passar o mouse */
+.fc .fc-button:hover {
+    background-color: #006b23;
+    border-color: #006b23;
+}
+
+/* Título do mês */
+.fc .fc-toolbar-title {
+    color: rgb(0, 0, 0);
+}
+
+/* Linhas e bordas do calendário */
+.fc .fc-scrollgrid,
+.fc .fc-scrollgrid td,
+.fc .fc-scrollgrid th {
+    border-color: #d1d5db;
+}
+/* Botão "Mês" quando estiver selecionado */
+.fc .fc-button-active {
+    background-color: #006b23 !important;
+    border-color: #006b23 !important;
+    color: white !important;
+}
+
+/* Botão "Hoje" */
+.fc .fc-today-button {
+    background-color: #008f2f;
+    border-color: #008f2f;
+    color: white;
+}
+
+/* Botão "Hoje" ao passar o mouse */
+.fc .fc-today-button:hover {
+    background-color: #006b23;
+    border-color: #006b23;
+}
+/* Botão Hoje */
+.fc .fc-today-button {
+    background-color: #008f2f !important;
+    border-color: #008f2f !important;
+    color: white !important;
+}
+
+/* Botão Hoje desativado (quando já está no dia atual) */
+.fc .fc-today-button:disabled {
+    background-color: #006b23 !important;
+    border-color: #006b23 !important;
+    color: white !important;
+    opacity: 1 !important;
+}
     </style>
 </head>
 

@@ -12,51 +12,45 @@
 
 <body>
 
-<div class="dashboard">
+    @include('layouts.navegacao')
 
-    <h1>Dashboard do Administrador</h1>
+    <main class="dashboard">
 
-    <p>
-        Bem-vindo, {{ auth()->user()->nome }}
-    </p>
+        <section class="dashboard-section">
 
-    <hr>
+            <h3>Calendário Acadêmico</h3>
 
-    <section class="dashboard-section">
+            <p>
+                Visualize e gerencie os eventos acadêmicos de todas as turmas.
+            </p>
 
-        <h3>Calendário Acadêmico</h3>
+            <a href="{{ url('/calendario') }}">
+                Acessar calendário
+            </a>
 
-        <p>
-            Visualize e gerencie os eventos acadêmicos de todas as turmas.
-        </p>
+        </section>
 
-        <a href="{{ url('/calendario') }}">
-            Acessar calendário
-        </a>
+        <hr>
 
-    </section>
+        <section class="dashboard-section">
 
-    <hr>
+            <h3>Representantes</h3>
 
-    <section class="dashboard-section">
+            <p>
+                Gerencie os representantes das turmas.
+            </p>
 
-        <h3>Representantes</h3>
+            <a href="{{ route('admin.representantes.index') }}">
+                Listar representantes
+            </a>
 
-        <p>
-            Gerencie os representantes das turmas.
-        </p>
+            <a href="{{ route('admin.representantes.create') }}">
+                Promover aluno a representante
+            </a>
 
-        <a href="{{ route('admin.representantes.index') }}">
-            Listar representantes
-        </a>
+        </section>
 
-        <a href="{{ route('admin.representantes.create') }}">
-            Promover aluno a representante
-        </a>
-
-    </section>
-
-</div>
+    </main>
 
 </body>
 

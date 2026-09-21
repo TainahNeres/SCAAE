@@ -2,28 +2,9 @@
 
     <div class="navbar-esquerda">
 
-        <a href="#" class="nav-botao">
-           
-        </a>
-
-        <a href="#" class="nav-botao">
-            
-        </a>
-
-        <a href="#" class="nav-botao">
-            
-        </a>
-
-        <a href="#" class="nav-botao">
-           
-        </a>
-
-        <a href="#" class="nav-botao">
-            
-        </a>
+        <img src="{{ asset('img/logo-ifba-pa-horiz3.png') }}" alt="Logo IFBA">
 
     </div>
-
 
     <div class="navbar-direita">
 
