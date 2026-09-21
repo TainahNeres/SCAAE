@@ -339,6 +339,7 @@ const EH_ADMIN =
     <script>
         let calendar;
         let turmaSelecionada = '';
+        let semanaEventos = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -348,107 +349,301 @@ document.addEventListener('DOMContentLoaded', function() {
 
     carregarOfertas();
 
-    function atualizarListaEventosSemana() {
 
-const dataAtual = calendar.getDate();
+function formatarDataISO(data) {
 
-const inicioSemana = new Date(dataAtual);
-inicioSemana.setDate(
-    dataAtual.getDate() - dataAtual.getDay()
-);
+    const ano = data.getFullYear();
 
-const fimSemana = new Date(inicioSemana);
-fimSemana.setDate(
-    inicioSemana.getDate() + 6
-);
+    const mes = String(
+        data.getMonth() + 1
+    ).padStart(2, '0');
 
-const eventos = calendar.getEvents().filter(evento => {
+    const dia = String(
+        data.getDate()
+    ).padStart(2, '0');
 
-    if (!evento.start) {
-        return false;
-    }
-
-    const dataEvento = new Date(evento.start);
-
-    return (
-        dataEvento >= inicioSemana &&
-        dataEvento <= fimSemana
-    );
-});
-
-const container = document.getElementById('eventosSemana');
-const titulo = document.getElementById('tituloSemanaEventos');
-
-const opcoesData = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-};
-
-titulo.textContent =
-    'Eventos de ' +
-    inicioSemana.toLocaleDateString('pt-BR', opcoesData) +
-    ' a ' +
-    fimSemana.toLocaleDateString('pt-BR', opcoesData);
-
-container.innerHTML = '';
-
-if (eventos.length === 0) {
-
-    container.innerHTML =
-        '<p>Nenhum evento disponível nesta semana.</p>';
-
-    return;
+    return `${ano}-${mes}-${dia}`;
 }
 
-eventos.sort((a, b) => {
-    return a.start - b.start;
-});
+    
+   async function atualizarListaEventosSemana() {
 
-eventos.forEach(evento => {
+    const dataAtual = calendar.getDate();
 
-    const div = document.createElement('div');
+    const inicioSemana = new Date(dataAtual);
 
-    div.classList.add('evento-semana');
+    inicioSemana.setHours(0, 0, 0, 0);
 
-    const disciplina =
-        evento.extendedProps.disciplina || 'Não informada';
+    inicioSemana.setDate(
+        inicioSemana.getDate()
+        - inicioSemana.getDay()
+        + (semanaEventos * 7)
+    );
 
-    const professor =
-        evento.extendedProps.professor || 'Não informado';
+    const fimSemana = new Date(inicioSemana);
 
-    const data =
-        evento.start.toLocaleDateString(
+    fimSemana.setDate(
+        fimSemana.getDate() + 7
+    );
+
+    const ultimoDia = new Date(fimSemana);
+
+    ultimoDia.setDate(
+        ultimoDia.getDate() - 1
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ELEMENTOS DA LISTA
+    |--------------------------------------------------------------------------
+    */
+
+    const container =
+        document.getElementById(
+            'eventosSemana'
+        );
+
+    const titulo =
+        document.getElementById(
+            'tituloSemanaEventos'
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TÍTULO
+    |--------------------------------------------------------------------------
+    */
+
+    const opcoesData = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    };
+
+    titulo.textContent =
+        'Eventos de ' +
+        inicioSemana.toLocaleDateString(
+            'pt-BR',
+            opcoesData
+        ) +
+        ' a ' +
+        ultimoDia.toLocaleDateString(
             'pt-BR',
             opcoesData
         );
 
-        div.innerHTML = `
-    <div class="evento-titulo">
-        ${evento.title}
-    </div>
 
-    <div class="evento-informacoes">
+    /*
+    |--------------------------------------------------------------------------
+    | CARREGANDO
+    |--------------------------------------------------------------------------
+    */
 
-        <div class="evento-info">
-            <span class="evento-label">Disciplina</span>
-            <span>${disciplina}</span>
-        </div>
+    container.innerHTML =
+        '<p>Carregando eventos...</p>';
 
-        <div class="evento-info">
-            <span class="evento-label">Data</span>
-            <span>${data}</span>
-        </div>
 
-        <div class="evento-info">
-            <span class="evento-label">Professor</span>
-            <span>${professor}</span>
-        </div>
+    /*
+    |--------------------------------------------------------------------------
+    | URL
+    |--------------------------------------------------------------------------
+    */
 
-    </div>
-`;
-    container.appendChild(div);
-});
+    let url =
+        '/eventos?' +
+        'start=' +
+        encodeURIComponent(
+            formatarDataISO(inicioSemana)
+        ) +
+        '&end=' +
+        encodeURIComponent(
+            formatarDataISO(fimSemana)
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN / PROFESSOR
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        (EH_PROFESSOR || EH_ADMIN)
+        && turmaSelecionada
+    ) {
+
+        url +=
+            '&turma_codigo=' +
+            encodeURIComponent(
+                turmaSelecionada
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BUSCA
+    |--------------------------------------------------------------------------
+    */
+
+    try {
+
+        const resposta =
+            await fetch(url);
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                'Erro ao buscar eventos.'
+            );
+        }
+
+        const eventos =
+            await resposta.json();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LIMPA
+        |--------------------------------------------------------------------------
+        */
+
+        container.innerHTML = '';
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SEM EVENTOS
+        |--------------------------------------------------------------------------
+        */
+
+        if (eventos.length === 0) {
+
+            container.innerHTML =
+                '<p>Nenhum evento disponível nesta semana.</p>';
+
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ORDENA
+        |--------------------------------------------------------------------------
+        */
+
+        eventos.sort(function(a, b) {
+
+            return new Date(a.start)
+                - new Date(b.start);
+
+        });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CRIA OS CARDS
+        |--------------------------------------------------------------------------
+        */
+
+        eventos.forEach(function(evento) {
+
+            const div =
+                document.createElement(
+                    'div'
+                );
+
+            div.classList.add(
+                'evento-semana'
+            );
+
+
+            const disciplina =
+                evento.extendedProps?.disciplina
+                || 'Não informada';
+
+
+            const professor =
+                evento.extendedProps?.professor
+                || 'Não informado';
+
+
+            const dataEvento =
+                new Date(evento.start);
+
+
+            const data =
+                dataEvento.toLocaleDateString(
+                    'pt-BR',
+                    opcoesData
+                );
+
+
+            div.innerHTML = `
+
+                <div class="evento-titulo">
+                    ${evento.title}
+                </div>
+
+                <div class="evento-informacoes">
+
+                    <div class="evento-info">
+
+                        <span class="evento-label">
+                            Disciplina
+                        </span>
+
+                        <span>
+                            ${disciplina}
+                        </span>
+
+                    </div>
+
+
+                    <div class="evento-info">
+
+                        <span class="evento-label">
+                            Data
+                        </span>
+
+                        <span>
+                            ${data}
+                        </span>
+
+                    </div>
+
+
+                    <div class="evento-info">
+
+                        <span class="evento-label">
+                            Professor
+                        </span>
+
+                        <span>
+                            ${professor}
+                        </span>
+
+                    </div>
+
+                </div>
+            `;
+
+
+            container.appendChild(div);
+        });
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao carregar lista semanal:',
+            erro
+        );
+
+        container.innerHTML =
+            '<p>Não foi possível carregar os eventos.</p>';
+    }
 }
 
     calendar = new FullCalendar.Calendar(
@@ -540,9 +735,7 @@ eventos.forEach(evento => {
                     });
             },
 
-            eventsSet: function() {
-    atualizarListaEventosSemana();
-},
+            
 
             /*
             |--------------------------------------------------------------------------
@@ -708,28 +901,31 @@ novoEvento(info.dateStr);
     );
 
     document.getElementById('btnProximaSemana')
-    .addEventListener('click', function() {
+.addEventListener('click', function() {
 
-        calendar.next();
-        atualizarListaEventosSemana();
-    });
+    semanaEventos++;
+
+    atualizarListaEventosSemana();
+});
 
 
 document.getElementById('btnSemanaAnterior')
-    .addEventListener('click', function() {
+.addEventListener('click', function() {
 
-        calendar.prev();
-        atualizarListaEventosSemana();
-    });
+    semanaEventos--;
 
-    let semanaEventos = 0;
+    atualizarListaEventosSemana();
+});
+
+
 
     console.log(
         "Calendário iniciado"
     );
 
     calendar.render();
-
+    semanaEventos = 0;
+    atualizarListaEventosSemana();
 
     /*
     |--------------------------------------------------------------------------
@@ -763,32 +959,23 @@ if (selectProfessor) {
 
     if (selectTurma) {
 
-        selectTurma.addEventListener(
-            'change',
-            function() {
+    selectTurma.addEventListener(
+        'change',
+        function() {
 
-                turmaSelecionada =
-                    this.value;
+            turmaSelecionada =
+                this.value;
 
-                /*
-                |--------------------------------------------------------------
-                | Atualiza as disciplinas disponíveis
-                |--------------------------------------------------------------
-                */
+            semanaEventos = 0;
 
-                carregarOfertas();
+            carregarOfertas();
 
+            calendar.refetchEvents();
 
-                /*
-                |--------------------------------------------------------------
-                | Recarrega eventos da turma
-                |--------------------------------------------------------------
-                */
-
-                calendar.refetchEvents();
-            }
-        );
-    }
+            atualizarListaEventosSemana();
+        }
+    );
+}
 
 });
 

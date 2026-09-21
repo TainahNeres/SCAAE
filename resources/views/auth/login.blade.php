@@ -83,7 +83,6 @@
             </form>
 
             <a href="#" class="esqueceu">
-                Esqueceu sua senha?
             </a>
 
         </div>

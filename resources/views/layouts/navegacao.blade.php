@@ -2,24 +2,24 @@
 
     <div class="navbar-esquerda">
 
-        <a href="#" class="nav-botao ativo">
-            Início
+        <a href="#" class="nav-botao">
+           
         </a>
 
         <a href="#" class="nav-botao">
-            Calendário
+            
         </a>
 
         <a href="#" class="nav-botao">
-            Disciplinas
+            
         </a>
 
         <a href="#" class="nav-botao">
-            Turmas
+           
         </a>
 
         <a href="#" class="nav-botao">
-            Configurações
+            
         </a>
 
     </div>

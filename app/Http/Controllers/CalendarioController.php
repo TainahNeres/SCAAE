@@ -132,80 +132,100 @@ class CalendarioController extends Controller
     | Retorna eventos para o FullCalendar
     |--------------------------------------------------------------------------
     */
-    public function eventos(Request $request)
-    {
-        $usuario = Auth::user();
+   public function eventos(Request $request)
+{
+    $usuario = Auth::user();
 
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN
-        |--------------------------------------------------------------------------
-        */
+    /*
+    |--------------------------------------------------------------------------
+    | DATAS SOLICITADAS
+    |--------------------------------------------------------------------------
+    |
+    | start = início do período
+    | end   = fim do período (exclusivo)
+    |
+    */
 
-        if ($usuario->isAdmin()) {
+    $start = $request->query('start');
+    $end = $request->query('end');
 
-            if ($request->filled('turma_codigo')) {
-        
-                $eventos = Evento::whereHas('oferta', function ($query) use ($request) {
-        
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN
+    |--------------------------------------------------------------------------
+    */
+
+    if ($usuario->isAdmin()) {
+
+        if ($request->filled('turma_codigo')) {
+
+            $query = Evento::whereHas(
+                'oferta',
+                function ($query) use ($request) {
+
                     $query->where(
                         'turma_codigo',
                         $request->turma_codigo
                     );
-        
-                })->get();
-        
-            } else {
-                alert("AAAA");
-                
-        
-            }
-        
+                }
+            );
+
+        } else {
+
+            return response()->json([]);
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROFESSOR
+    |--------------------------------------------------------------------------
+    */
+
+    elseif ($usuario->isProfessor()) {
+
+        $professor = Professor::where(
+            'matricula',
+            $usuario->matricula
+        )->first();
+
+        if (!$professor) {
+            return response()->json([]);
         }
 
+
         /*
-        |--------------------------------------------------------------------------
-        | PROFESSOR
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
+        | Turma selecionada pelo professor
+        |----------------------------------------------------------------------
         */
 
-        elseif ($usuario->isProfessor()) {
+        $turmaCodigo =
+            $request->query('turma_codigo');
 
-            $professor = Professor::where(
-                'matricula',
-                $usuario->matricula
-            )->first();
 
-            if (!$professor) {
-                return response()->json([]);
-            }
+        /*
+        |----------------------------------------------------------------------
+        | Sem turma selecionada
+        |----------------------------------------------------------------------
+        */
 
-            /*
-            |--------------------------------------------------------------
-            | Turma selecionada pelo professor
-            |--------------------------------------------------------------
-            */
+        if (!$turmaCodigo) {
+            return response()->json([]);
+        }
 
-            $turmaCodigo = $request->query('turma_codigo');
 
-            /*
-            |--------------------------------------------------------------
-            | Sem turma selecionada
-            |--------------------------------------------------------------
-            */
+        /*
+        |----------------------------------------------------------------------
+        | Verifica se o professor realmente possui disciplina
+        | nessa turma
+        |----------------------------------------------------------------------
+        */
 
-            if (!$turmaCodigo) {
-                return response()->json([]);
-            }
-
-            /*
-            |--------------------------------------------------------------
-            | Verifica se o professor realmente possui disciplina
-            | nessa turma.
-            |--------------------------------------------------------------
-            */
-
-            $ofertasDoProfessor = DisciplinaProfessor::where(
+        $ofertasDoProfessor =
+            DisciplinaProfessor::where(
                 'professor_id',
                 $professor->id
             )
@@ -215,199 +235,231 @@ class CalendarioController extends Controller
             )
             ->pluck('id');
 
-            if ($ofertasDoProfessor->isEmpty()) {
-                return response()->json([]);
-            }
+        if ($ofertasDoProfessor->isEmpty()) {
+            return response()->json([]);
+        }
 
-            /*
-            |--------------------------------------------------------------
-            | Agora buscamos TODAS as disciplinas da turma.
-            |
-            | Não apenas as disciplinas do professor logado.
-            |--------------------------------------------------------------
-            */
 
-            $ofertasDaTurma = DisciplinaProfessor::where(
+        /*
+        |----------------------------------------------------------------------
+        | Todas as disciplinas da turma
+        |----------------------------------------------------------------------
+        */
+
+        $ofertasDaTurma =
+            DisciplinaProfessor::where(
                 'turma_codigo',
                 $turmaCodigo
             )->pluck('id');
 
-            $eventos = Evento::whereIn(
-                'disciplina_professor_id',
-                $ofertasDaTurma
-            )->get();
-        }
+        $query = Evento::whereIn(
+            'disciplina_professor_id',
+            $ofertasDaTurma
+        );
+    }
 
-        /*
-        |--------------------------------------------------------------------------
-        | ALUNO / REPRESENTANTE
-        |--------------------------------------------------------------------------
-        */
 
-        else {
+    /*
+    |--------------------------------------------------------------------------
+    | ALUNO / REPRESENTANTE
+    |--------------------------------------------------------------------------
+    */
 
-            $ofertas = DisciplinaProfessor::where(
+    else {
+
+        $ofertas =
+            DisciplinaProfessor::where(
                 'turma_codigo',
                 $usuario->turma_codigo
             )->pluck('id');
 
-            $eventos = Evento::whereIn(
-                'disciplina_professor_id',
-                $ofertas
-            )->get();
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CARREGA DISCIPLINA E PROFESSOR
-        |--------------------------------------------------------------------------
-        */
-
-        $eventos = $eventos->load(
-            'oferta.disciplina',
-            'oferta.professor',
-            'criador'
+        $query = Evento::whereIn(
+            'disciplina_professor_id',
+            $ofertas
         );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO DE DATA
+    |--------------------------------------------------------------------------
+    */
+
+    if ($start && $end) {
+
+    $query
+        ->whereDate('data_inicio', '>=', $start)
+        ->whereDate('data_inicio', '<', $end);
+}
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BUSCA OS EVENTOS
+    |--------------------------------------------------------------------------
+    */
+
+    $eventos = $query->get();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARREGA DISCIPLINA E PROFESSOR
+    |--------------------------------------------------------------------------
+    */
+
+    $eventos = $eventos->load(
+        'oferta.disciplina',
+        'oferta.professor',
+        'criador'
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEFINE QUAIS EVENTOS O PROFESSOR PODE EDITAR
+    |--------------------------------------------------------------------------
+    */
+
+    $professorLogado = null;
+
+    if ($usuario->isProfessor()) {
+
+        $professorLogado = Professor::where(
+            'matricula',
+            $usuario->matricula
+        )->first();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONVERTE PARA FULLCALENDAR
+    |--------------------------------------------------------------------------
+    */
+
+    $dados = $eventos->map(function ($evento) use (
+        $usuario,
+        $professorLogado
+    ) {
+
+        $oferta = $evento->oferta;
+
+        $podeEditar = false;
+        $podeExcluir = false;
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Define quais eventos o professor pode editar
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
+        | ADMIN
+        |----------------------------------------------------------------------
         */
 
-        $professorLogado = null;
+        if ($usuario->isAdmin()) {
 
-        if ($usuario->isProfessor()) {
-
-            $professorLogado = Professor::where(
-                'matricula',
-                $usuario->matricula
-            )->first();
+            $podeEditar = true;
+            $podeExcluir = true;
         }
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Converte para FullCalendar
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
+        | PROFESSOR
+        |----------------------------------------------------------------------
         */
 
-        $dados = $eventos->map(function ($evento) use (
-            $usuario,
-            $professorLogado
+        elseif (
+            $usuario->isProfessor()
+            && $professorLogado
+            && $oferta
+            && $oferta->professor_id
+                === $professorLogado->id
         ) {
 
-            $oferta = $evento->oferta;
+            $podeEditar = true;
+            $podeExcluir = true;
+        }
 
-            $podeEditar = false;
-            $podeExcluir = false;
 
-            /*
-            |--------------------------------------------------------------
-            | ADMIN pode editar
-            |--------------------------------------------------------------
-            */
+        /*
+        |----------------------------------------------------------------------
+        | REPRESENTANTE
+        |----------------------------------------------------------------------
+        */
 
-            if ($usuario->isAdmin()) {
+        elseif (
+            $usuario->representanteAtivo()
+            && $oferta
+            && $oferta->turma_codigo
+                === $usuario->turma_codigo
+        ) {
 
-                $podeEditar = true;
-                $podeExcluir = $podeEditar;
-            }
+            $podeEditar = true;
+            $podeExcluir = true;
+        }
 
-            /*
-            |--------------------------------------------------------------
-            | Professor somente se o evento pertence à disciplina dele
-            |--------------------------------------------------------------
-            */
 
-            elseif (
-                $usuario->isProfessor()
-                && $professorLogado
-                && $oferta
-                && $oferta->professor_id === $professorLogado->id
-            ) {
+        return [
 
-                $podeEditar = true;
-                $podeExcluir = $podeEditar;
-            }
+            'id' =>
+                $evento->id,
 
-            /*
-            |--------------------------------------------------------------
-            | Representante pode editar eventos da própria turma
-            |--------------------------------------------------------------
-            */
+            'title' =>
+                $evento->titulo,
 
-            elseif (
-                $usuario->representanteAtivo()
-                && $oferta
-                && $oferta->turma_codigo === $usuario->turma_codigo
-            ) {
+            'start' =>
+                $evento->data_inicio,
 
-                $podeEditar = true;
-                $podeExcluir = $podeEditar;
-            }
+            'color' =>
+                $this->corEvento($evento),
 
-            return [
+            'extendedProps' => [
 
-                'id' => $evento->id,
+                'tipo' =>
+                    $evento->tipo,
 
-                'title' => $evento->titulo,
+                'hora_inicio' =>
+                    $evento->hora_inicio,
 
-                'start' => $evento->data_inicio,
+                'hora_fim' =>
+                    $evento->hora_fim,
 
-                'color' => $this->corEvento($evento),
+                'descricao' =>
+                    $evento->descricao,
 
-                'extendedProps' => [
+                'data_inicio' =>
+                    $evento->data_inicio,
 
-                    'tipo' => $evento->tipo,
+                'disciplina' =>
+                    $oferta?->disciplina?->nome,
 
-                    'hora_inicio' =>
-                        $evento->hora_inicio,
+                'criador' =>
+                    $evento->criador?->nome,
 
-                    'hora_fim' =>
-                        $evento->hora_fim,
+                'professor' =>
+                    $oferta?->professor?->nome,
 
-                    'descricao' =>
-                        $evento->descricao,
+                'professor_id' =>
+                    $oferta?->professor_id,
 
-                    'data_inicio' =>
-                        $evento->data_inicio,
+                'turma_codigo' =>
+                    $oferta?->turma_codigo,
 
-                    'disciplina' =>
-                        $oferta?->disciplina?->nome,
+                'disciplina_professor_id' =>
+                    $evento->disciplina_professor_id,
 
-                    'criador' =>
-                        $evento->criador?->nome,
-                    
-                    'professor' =>
-                        $oferta?->professor?->nome,
-                    'professor_id' =>
-                        $oferta?->professor_id,
+                'pode_editar' =>
+                    $podeEditar,
 
-                    'turma_codigo' =>
-                        $oferta?->turma_codigo,
+                'pode_excluir' =>
+                    $podeExcluir
+            ]
+        ];
+    });
 
-                    'disciplina_professor_id' =>
-                        $evento->disciplina_professor_id,
-
-                    /*
-                    |------------------------------------------------------
-                    | Informação usada pelo JavaScript
-                    |------------------------------------------------------
-                    */
-
-                    'pode_editar' =>
-                        $podeEditar,
-                    'pode_excluir' =>
-                        $podeExcluir
-                ]
-            ];
-        });
-
-        return response()->json($dados);
-    }
+    return response()->json($dados);
+}
 
 
     /*

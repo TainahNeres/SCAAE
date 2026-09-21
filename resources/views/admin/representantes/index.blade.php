@@ -38,7 +38,7 @@
                     <th>Nome</th>
                     <th>Turma</th>
                     <th>E-mail pessoal</th>
-                    <th>Telefone</th>
+                    
                 </tr>
             </thead>
 
@@ -60,9 +60,6 @@
                             {{ $representante->usuario->email_pessoal ?? 'Não informado' }}
                         </td>
 
-                        <td>
-                            {{ $representante->usuario->telefone ?? '—' }}
-                        </td>
 
                     </tr>
 
