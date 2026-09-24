@@ -38,7 +38,7 @@ body {
         }
 
         /* Modal */
-        .modal {
+.modal {
     display: none;
 
     position: fixed;
@@ -52,6 +52,12 @@ body {
     align-items: center;
 
     z-index: 9999;
+
+    /* Impede o scroll no fundo do modal */
+    overflow: hidden;
+
+    /* Evita que o scroll seja repassado ao calendário */
+    overscroll-behavior: contain;
 }
 
 .lista-eventos-semana {
@@ -128,13 +134,151 @@ body {
 
     padding: 25px;
 
-    border-radius: 20px;
+    border-radius: 0px;
 
     max-height: 90vh;
 
     overflow-y: auto;
 
     position: relative;
+}
+/*css do logout*/
+/* Menu do usuário */
+
+/* Menu do usuário */
+
+.menu-usuario {
+    position: relative;
+}
+
+/* Remove o marcador padrão do details */
+
+.menu-usuario summary {
+    list-style: none;
+}
+
+.menu-usuario summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Botão com nome e cargo */
+
+.usuario-logado {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    color: #006020;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.usuario-logado:hover {
+    background: #e8f5e9;
+}
+
+/* Nome do usuário */
+
+.usuario-logado strong {
+    font-size: 15px;
+}
+
+/* Cargo */
+
+.usuario-logado span {
+    margin-top: 3px;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+/* Seta do menu */
+
+.seta-menu {
+    margin-left: 5px;
+
+    color: #006020 !important;
+
+    font-size: 12px !important;
+}
+
+/* Caixa de opções */
+
+.opcoes-usuario {
+    position: absolute;
+
+    top: calc(100% + 8px);
+
+    right: 0;
+
+    min-width: 150px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .12);
+
+    padding: 6px;
+
+    z-index: 10000;
+}
+
+/* Formulário do logout */
+
+.opcoes-usuario form {
+    margin: 0;
+}
+
+/* Botão de sair */
+
+.botao-sair {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    padding: 10px 12px;
+
+    background: transparent;
+
+    color: #475569;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.botao-sair:hover {
+    background: #e8f5e9;
+
+    color: #006020;
+}
+
+/* Símbolo de sair */
+
+.icone-sair {
+    font-size: 18px;
 }
 .navbar {
     max-width: 1200px;
@@ -253,6 +397,12 @@ body {
         /* ==============================
    PERSONALIZAÇÃO DO CALENDÁRIO
    ============================== */
+/*caixa de seleção*/
+   #selectTurma:focus {
+    outline: none;
+    border-color: #008f2f;
+    box-shadow: 0 0 0 2px rgba(0, 143, 47, 0.15);
+}
 
 /* Cabeçalho com os dias da semana */
 .fc .fc-col-header-cell {

@@ -177,13 +177,15 @@ if (!$jwt) {
     | Logout
     |--------------------------------------------------------------------------
     */
-    public function logout()
-    {
-        Auth::logout();
+public function logout(Request $request)
+{
+    Auth::logout();
 
-        session()->forget('suap_jwt');
+    $request->session()->invalidate();
 
-        return redirect('/login');
-    }
+    $request->session()->regenerateToken();
+
+    return redirect('/login');
+}
 }
 ?>

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AlunoController;
 use App\Http\Controllers\Admin\ProfessorController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\SuapExplorerController;
 use App\Http\Controllers\SuapTestController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Admin\RepresentanteController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +38,8 @@ Route::get('/login', function () {
 
 Route::post('/login', [LoginController::class, 'login']);
 
-Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout');
 
 
 /*
