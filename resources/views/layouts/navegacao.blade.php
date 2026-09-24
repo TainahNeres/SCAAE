@@ -8,36 +8,31 @@
 
 <div class="navbar-direita">
 
-    <details class="menu-usuario">
+    <div class="usuario-logado">
 
-        <summary class="usuario-logado">
+        <strong>{{ auth()->user()->nome }}</strong>
 
-            <strong>{{ auth()->user()->nome }}</strong>
+        <span>
+            {{ ucfirst(auth()->user()->role) }}
+        </span>
 
-            <span>
-                {{ ucfirst(auth()->user()->role) }}
-                <span class="seta-menu">▾</span>
-            </span>
+    </div>
 
-        </summary>
+    <form method="POST" action="{{ route('logout') }}">
 
-        <div class="opcoes-usuario">
+        @csrf
 
-            <form method="POST" action="{{ route('logout') }}">
+        <button type="submit"
+                class="botao-sair"
+                title="Sair do sistema">
 
-                @csrf
+            <span class="icone-sair">➜]</span>
 
-                <button type="submit" class="botao-sair">
+        </button>
 
-                    <span class="icone-sair">⎋</span>
+    </form>
 
-                    Sair
-
-                </button>
-
-            </form>
-
-        </div>
+</div>
 
     </details>
 

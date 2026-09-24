@@ -306,41 +306,19 @@ body {
 }
 
 /* Usuário na extrema direita */
+/* Usuário na extrema direita */
+
 .navbar-direita {
     display: flex;
+
     align-items: center;
+
+    gap: 12px;
+
     margin-left: auto;
 }
 
-
-.nav-botao {
-    text-decoration: none;
-
-    color: #475569;
-
-    padding: 10px 15px;
-
-    border-radius: 10px;
-
-    font-size: 14px;
-
-    transition: .2s;
-}
-
-.nav-botao:hover {
-    background: #F1F5F9;
-
-    color: #1E293B;
-}
-
-.nav-botao.ativo {
-    background: #E2E8F0;
-
-    color: #1E293B;
-
-    font-weight: bold;
-}
-
+/* Informações do usuário */
 
 .usuario-logado {
     display: flex;
@@ -364,35 +342,55 @@ body {
     color: #64748B;
 }
 
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
+/* Formulário de logout */
 
-        textarea {
-            height: 90px;
-        }
+.navbar-direita form {
+    margin: 0;
+}
 
-        .botoes-modal {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
+/* Botão de sair */
 
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+.botao-sair {
+    display: flex;
 
-        #btnExcluir {
-            background: #eba4a4;
-        }
+    align-items: center;
+
+    justify-content: center;
+
+    width: 28px;
+
+    height: 28px;
+
+    padding: 0;
+
+    background: transparent;
+
+    color: #006020;
+
+    border: 0px solid #d1e7d5;
+
+    border-radius: 10px;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.botao-sair:hover {
+    background: #e8f5e9;
+
+    border-color: #008f2f;
+
+    color: #008f2f;
+}
+
+/* Ícone de sair */
+
+.icone-sair {
+    font-size: 12px;
+}
 
         /* ==============================
    PERSONALIZAÇÃO DO CALENDÁRIO
