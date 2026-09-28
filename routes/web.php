@@ -111,6 +111,16 @@ Route::middleware(['auth', 'role:admin'])
             '/representantes/promover',
             [RepresentanteController::class, 'store']
         )->name('admin.representantes.store');
+
+        Route::get(
+    '/representantes/remover',
+    [RepresentanteController::class, 'remove']
+)->name('admin.representantes.remove');
+
+Route::post(
+    '/representantes/remover',
+    [RepresentanteController::class, 'destroy']
+)->name('admin.representantes.destroy');
     });
 
 

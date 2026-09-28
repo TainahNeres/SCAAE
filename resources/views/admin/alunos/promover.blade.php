@@ -1,4 +1,4 @@
-<h1>Promover aluno a representante</h1>
+<h1>Promover</h1>
 
 <p>Digite a matrícula do aluno:</p>
 

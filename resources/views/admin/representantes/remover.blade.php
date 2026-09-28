@@ -2,12 +2,14 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <title>Promover representante</title>
+    <title>Remover representante</title>
 
     <link rel="stylesheet"
           href="{{ asset('css/dashboardadmin.css') }}">
+
 </head>
 
 <body>
@@ -16,16 +18,15 @@
 
 <div class="dashboard">
 
-    <h1>Promover</h1>
+    <h1>Remover representante</h1>
 
     <p>
-        Informe a matrícula do aluno que deseja promover.
+        Informe a matrícula do representante que deseja remover.
     </p>
-
-    <hr>
+<hr>
     <form
         method="POST"
-        action="{{ route('admin.representantes.store') }}"
+        action="{{ route('admin.representantes.destroy') }}"
     >
 
         @csrf
@@ -37,12 +38,13 @@
             value="{{ old('matricula') }}"
         >
 
-<button type="submit" class="botao-promover">
-    Promover
+<button type="submit" class="botao-remover">
+    Remover representante
 </button>
 
 
     </form>
+
 
     @if ($errors->any())
 
@@ -51,6 +53,16 @@
         </p>
 
     @endif
+
+
+    @if (session('success'))
+
+        <p style="color: green;">
+            {{ session('success') }}
+        </p>
+
+    @endif
+
 
     <br>
 
@@ -62,11 +74,6 @@
 <a class="botao-secundario"
    href="{{ route('admin.dashboard') }}">
     Voltar ao dashboard
-</a>
-<br><br>
-<a class="botao-remover"
-   href="{{ route('admin.representantes.remove') }}">
-    Remover representante
 </a>
 
 </div>

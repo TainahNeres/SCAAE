@@ -45,8 +45,12 @@
             </a>
 
             <a href="{{ route('admin.representantes.create') }}">
-                Promover aluno a representante
+                Promover
             </a>
+
+            <a href="{{ route('admin.representantes.remove') }}">
+    Remover representante
+</a>
 
         </section>
 

@@ -82,4 +82,52 @@ class RepresentanteController extends Controller
                 $usuario->nome . ' foi promovido a representante.'
             );
     }
+
+    public function remove()
+{
+    return view('admin.representantes.remover');
+}
+
+
+public function destroy(Request $request)
+{
+    $request->validate([
+        'matricula' => 'required'
+    ]);
+
+    $usuario = \App\Models\Usuario::where(
+        'matricula',
+        $request->matricula
+    )->first();
+
+    if (!$usuario) {
+        return back()->withErrors([
+            'matricula' => 'Aluno não encontrado.'
+        ]);
+    }
+
+    $representante = \App\Models\Representante::where(
+        'usuario_id',
+        $usuario->id
+    )->where(
+        'ativo',
+        true
+    )->first();
+
+    if (!$representante) {
+        return back()->withErrors([
+            'matricula' => 'Este aluno não é um representante ativo.'
+        ]);
+    }
+
+    $representante->ativo = false;
+    $representante->save();
+
+    $usuario->role = 'aluno';
+    $usuario->save();
+
+    return redirect()
+        ->route('admin.representantes.index')
+        ->with('success', 'Representante removido com sucesso.');
+}
 }

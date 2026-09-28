@@ -12,6 +12,8 @@
 
 <body>
 
+@include('layouts.navegacao')
+
 <div class="dashboard">
 
     <h1>Representantes</h1>
@@ -100,15 +102,20 @@
 
     <br>
 
-    <a href="{{ route('admin.representantes.create') }}">
-        Promover aluno a representante
-    </a>
-
-    <br><br>
-
-    <a href="{{ route('admin.dashboard') }}">
-        Voltar ao dashboard
-    </a>
+<a class="botao-promover"
+   href="{{ route('admin.representantes.create') }}">
+    Promover
+</a>
+<br><br>
+<a class="botao-remover"
+   href="{{ route('admin.representantes.remove') }}">
+    Remover representante
+</a>
+<br><br>
+<a class="botao-secundario"
+   href="{{ route('admin.dashboard') }}">
+    Voltar ao dashboard
+</a>
 
 </div>
 
