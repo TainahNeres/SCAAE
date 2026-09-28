@@ -134,7 +134,7 @@ body {
 
     padding: 25px;
 
-    border-radius: 0px;
+    border-radius: 20px;
 
     max-height: 90vh;
 
@@ -199,6 +199,36 @@ body {
     font-size: 13px;
 
     color: #64748b;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.modal-content textarea {
+    height: 90px;
+}
+
+.botoes-modal {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.botoes-modal button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#btnExcluir {
+    background: #eba4a4;
 }
 
 /* Seta do menu */
