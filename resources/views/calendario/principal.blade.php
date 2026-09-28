@@ -920,11 +920,52 @@ function formatarDataISO(data) {
             |--------------------------------------------------------------
             */
 
-            editable:
-                PODE_GERENCIAR && !EH_PROFESSOR,
+editable:
+    PODE_GERENCIAR && !EH_PROFESSOR,
 
-            selectable:
-                PODE_GERENCIAR,
+selectable:
+    PODE_GERENCIAR,
+
+eventAllow: function(dropInfo, draggedEvent) {
+
+    if (!EH_REPRESENTANTE) {
+        return true;
+    }
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const dataOriginal = new Date(draggedEvent.start);
+    dataOriginal.setHours(0, 0, 0, 0);
+
+    if (dataOriginal < hoje) {
+        return false;
+    }
+
+    return true;
+},
+
+eventDragStart: function(info) {
+
+    if (!EH_REPRESENTANTE) {
+        return;
+    }
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const dataEvento = new Date(info.event.start);
+    dataEvento.setHours(0, 0, 0, 0);
+
+    if (dataEvento < hoje) {
+
+        alert(
+            'Não é possível mover um evento que já ocorreu.'
+        );
+
+        info.jsEvent.preventDefault();
+    }
+},
 
             headerToolbar: {
 
@@ -1103,56 +1144,119 @@ novoEvento(info.dateStr);
             |--------------------------------------------------------------------------
             */
 
-            eventDrop: async function(info) {
+eventDrop: async function(info) {
 
-                await fetch(
-                    '/eventos/' +
-                    info.event.id,
-                    {
+    /*
+    |--------------------------------------------------------------------------
+    | Representante não pode arrastar evento de data passada
+    |--------------------------------------------------------------------------
+    */
 
-                        method: 'PUT',
+    if (EH_REPRESENTANTE) {
 
-                        headers: {
+        const hoje = new Date();
 
-                            'Content-Type':
-                                'application/json',
+        hoje.setHours(0, 0, 0, 0);
 
-                            'X-CSRF-TOKEN':
-                                document
-                                    .querySelector(
-                                        'meta[name="csrf-token"]'
-                                    )
-                                    .content
-                        },
+        const dataEvento = new Date(info.event.start);
 
-                        body: JSON.stringify({
+        dataEvento.setHours(0, 0, 0, 0);
 
-                            titulo:
-                                info.event.title,
+        if (dataEvento < hoje) {
 
-                            tipo:
-                                info.event.extendedProps.tipo,
+            alert(
+                'Não é possível mover um evento que já ocorreu.'
+            );
 
-                            data_inicio:
-                                info.event.startStr,
+            info.revert();
 
-                            hora_inicio:
-                                info.event.extendedProps.hora_inicio,
+            return;
+        }
+    }
 
-                            hora_fim:
-                                info.event.extendedProps.hora_fim,
 
-                            descricao:
-                                info.event.extendedProps.descricao,
+    /*
+    |--------------------------------------------------------------------------
+    | Salva a nova data
+    |--------------------------------------------------------------------------
+    */
 
-                            disciplina_professor_id:
-                                info.event.extendedProps
-                                    .disciplina_professor_id
-                        })
-                    }
-                );
+    try {
 
+        const resposta = await fetch(
+            '/eventos/' +
+            info.event.id,
+            {
+                method: 'PUT',
+
+                headers: {
+                    'Content-Type':
+                        'application/json',
+
+                    'X-CSRF-TOKEN':
+                        document
+                            .querySelector(
+                                'meta[name="csrf-token"]'
+                            )
+                            .content
+                },
+
+                body: JSON.stringify({
+
+                    titulo:
+                        info.event.title,
+
+                    tipo:
+                        info.event.extendedProps.tipo,
+
+                    data_inicio:
+                        info.event.startStr,
+
+                    hora_inicio:
+                        info.event.extendedProps.hora_inicio,
+
+                    hora_fim:
+                        info.event.extendedProps.hora_fim,
+
+                    descricao:
+                        info.event.extendedProps.descricao,
+
+                    disciplina_professor_id:
+                        info.event.extendedProps
+                            .disciplina_professor_id
+                })
             }
+        );
+
+        if (!resposta.ok) {
+
+            info.revert();
+
+            const resultado =
+                await resposta.json();
+
+            alert(
+                resultado.mensagem ||
+                'Não foi possível mover o evento.'
+            );
+
+            return;
+        }
+
+        calendar.refetchEvents();
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        info.revert();
+
+        alert(
+            'Ocorreu um erro ao mover o evento.'
+        );
+    }
+
+}
         }
     );
 
