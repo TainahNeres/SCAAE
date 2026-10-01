@@ -826,15 +826,21 @@ function formatarDataISO(data) {
                 || 'Não informado';
 
 
-            const dataEvento =
-                new Date(evento.start);
+            const partesData =
+    evento.start.split('-');
 
+const dataEvento =
+    new Date(
+        Number(partesData[0]),
+        Number(partesData[1]) - 1,
+        Number(partesData[2])
+    );
 
-            const data =
-                dataEvento.toLocaleDateString(
-                    'pt-BR',
-                    opcoesData
-                );
+const data =
+    dataEvento.toLocaleDateString(
+        'pt-BR',
+        opcoesData
+    );
 
 
             div.innerHTML = `
