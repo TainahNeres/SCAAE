@@ -164,35 +164,63 @@ class EnviarLembretesEventos extends Command
                             "Enviando e-mail para: {$email}"
                         );
 
-                        Mail::raw(
-                            "Olá, {$usuario->nome}!\n\n" .
+$oferta = $evento->oferta;
 
-                            "Este é um lembrete do SCAAE.\n\n" .
+$disciplina = $oferta?->disciplina?->nome ?? 'Não informado';
+$professor = $oferta?->professor?->nome ?? 'Não informado';
+$criador = $evento->criador?->nome ?? 'Não informado';
 
-                            "Evento: {$evento->titulo}\n" .
+$tipos = [
+    'prova' => 'Prova',
+    'trabalho' => 'Trabalho',
+    'seminario' => 'Seminário',
+    'reuniao' => 'Reunião',
+    'outro' => 'Outro',
+];
 
-                            "Data: " .
-                            $dataHoraEvento->format('d/m/Y') .
-                            "\n" .
+$tipo = $tipos[$evento->tipo] ?? $evento->tipo;
 
-                            "Horário: " .
-                            $dataHoraEvento->format('H:i') .
-                            "\n\n" .
+$horario = 'Não informado';
 
-                            "O evento acontecerá em aproximadamente 24 horas.\n\n" .
+if ($evento->hora_inicio) {
+    $horario = Carbon::parse($evento->hora_inicio)->format('H:i');
 
-                            "Sistema de Controle de Avaliações " .
-                            "e Atividades Escolares - SCAAE",
+    if ($evento->hora_fim) {
+        $horario .= ' às ' . Carbon::parse($evento->hora_fim)->format('H:i');
+    }
+}
 
-                            function ($message) use ($email, $evento) {
+$data = $evento->data_inicio
+    ? Carbon::parse($evento->data_inicio)->format('d/m/Y')
+    : 'Não informada';
 
-                                $message
-                                    ->to($email)
-                                    ->subject(
-                                        'Lembrete: ' . $evento->titulo
-                                    );
-                            }
-                        );
+$descricao = $evento->descricao ?: 'Não informada';
+
+Mail::raw(
+    "Olá, {$usuario->nome}!\n\n" .
+
+    "Este é um lembrete de que o seguinte evento acontecerá em 24 horas:\n\n" .
+
+    "Título: {$evento->titulo}\n" .
+    "Disciplina: {$disciplina}\n" .
+    "Professor: {$professor}\n" .
+    "Criado por: {$criador}\n" .
+    "Data: {$data}\n" .
+    "Horário: {$horario}\n" .
+    "Tipo: {$tipo}\n" .
+    "Descrição: {$descricao}\n\n" .
+
+    "Sistema de Controle de Avaliações e Atividades Escolares - SCAAE",
+
+    function ($message) use ($email, $evento) {
+
+        $message
+            ->to($email)
+            ->subject(
+                'Lembrete: ' . $evento->titulo
+            );
+    }
+);
 
                         $this->info(
                             "E-mail enviado para {$email}"
