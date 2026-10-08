@@ -570,7 +570,7 @@ public function verificarLimite(Request $request)
 
     return response()->json([
         'quantidade' => $quantidade,
-        'limite_atingido' => $quantidade >= 3
+        'limite_atingido' => $quantidade >= 2
     ]);
 }
 
@@ -635,7 +635,7 @@ public function verificarLimite(Request $request)
         )
         ->count();
         
-        if ($quantidade >= 3) {
+        if ($quantidade >= 2) {
         
             return response()->json([
                 'limite_atingido' => true,
@@ -762,7 +762,7 @@ public function verificarLimite(Request $request)
         )
         ->count();
         
-        if ($quantidade >= 3) {
+        if ($quantidade >= 2) {
         
             return response()->json([
                 'limite_atingido' => true,

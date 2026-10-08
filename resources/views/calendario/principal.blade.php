@@ -1071,7 +1071,7 @@ if (
 
 /*
 |--------------------------------------------------------------
-| Verifica se já existem 3 eventos nesse dia
+| Verifica se já existem 2 eventos nesse dia
 |--------------------------------------------------------------
 */
 
@@ -1081,10 +1081,10 @@ const eventosDoDia = calendar.getEvents().filter(evento => {
 
 });
 
-if (eventosDoDia.length >= 3) {
+if (eventosDoDia.length >= 2) {
 
     alert(
-        'Não é possível criar um evento neste dia, pois esta turma já possui 3 avaliações marcadas para essa data.'
+        'Não é possível criar um evento neste dia, pois esta turma já possui 2 avaliações marcadas para essa data.'
     );
 
     return;
